@@ -1,0 +1,500 @@
+# Decision and Policy Model
+
+## 1. Purpose
+
+A decision is a choice made from available evidence, context, constraints, and objectives.
+
+A policy defines how decisions should be made under particular conditions.
+
+EVolution's analytical pipeline produces information that can support decisions, but the analytical core does not inherently decide what action should be taken.
+
+The conceptual boundary is:
+
+```text
+Events
+   ↓
+State
+   ↓
+Measurements
+   ↓
+Time Series
+   ↓
+Aggregation
+   ↓
+Patterns
+   ↓
+Analysis
+   ↓
+Decision / Policy
+   ↓
+Action
+```
+
+The distinction is important because describing a system and deciding what to do about it are different responsibilities.
+
+---
+
+## 2. Analysis vs Decision
+
+Analysis produces statements about available evidence.
+
+A decision selects an outcome or action based on those statements and additional constraints.
+
+For example:
+
+```text
+Analysis:
+    Recent sessions show a sustained negative trend.
+
+Decision:
+    Stop the current session.
+```
+
+The first is an analytical conclusion.
+
+The second is a policy-dependent choice.
+
+Different users or applications may make different decisions from the same analysis.
+
+Therefore:
+
+```text
+Same evidence
+    ↓
+Different policies
+    ↓
+Different decisions
+```
+
+EVolution should not assume that one of those decisions is universally correct.
+
+---
+
+## 3. Policy
+
+A policy defines conditions under which a particular decision should be considered or selected.
+
+Conceptually:
+
+```text
+Policy
+{
+    name
+    scope
+    conditions
+    objectives
+    constraints
+    actions
+}
+```
+
+A policy may depend on:
+
+* measurements
+* state
+* patterns
+* analysis findings
+* historical context
+* external context
+* user-defined constraints
+* objectives
+
+For example:
+
+```text
+IF
+    drawdown > configured_limit
+AND
+    negative_trend is active
+THEN
+    recommend stopping the session
+```
+
+The threshold, interpretation, and resulting action belong to the policy or application domain rather than the generic analytical core.
+
+---
+
+## 4. Decision
+
+A decision is the result of applying a policy or decision procedure to available evidence and context.
+
+Conceptually:
+
+```text
+Decision
+{
+    policy
+    scope
+    inputs
+    outcome
+    reasoning
+    confidence?
+    constraints
+    provenance
+}
+```
+
+A decision should retain enough information to determine why it was produced.
+
+For example:
+
+```text
+Decision
+    policy: session-risk-policy-v2
+    outcome: stop_session
+    evidence:
+        drawdown = 18 BB
+        trend = negative
+        duration = 143 hands
+    constraints:
+        max_drawdown = 15 BB
+```
+
+The exact representation remains undecided.
+
+---
+
+## 5. Recommendation vs Action
+
+A recommendation and an action are different concepts.
+
+A recommendation proposes an outcome:
+
+```text
+Recommendation
+    → stop_session
+```
+
+An action actually changes something:
+
+```text
+Action
+    → terminate_session()
+```
+
+EVolution may produce recommendations or decision-support information without executing actions.
+
+Actual action execution belongs to an application or control system.
+
+This separation prevents analytical components from unexpectedly controlling external systems.
+
+---
+
+## 6. Deterministic Policies
+
+Some policies can be completely deterministic.
+
+For example:
+
+```text
+IF bankroll < minimum_bankroll
+THEN
+    stake_eligibility = false
+```
+
+Given identical inputs and configuration, the same policy should produce the same result.
+
+This makes deterministic policies:
+
+* reproducible
+* testable
+* explainable
+* easy to audit
+
+---
+
+## 7. Probabilistic Decisions
+
+Some decision procedures may depend on uncertainty.
+
+For example:
+
+```text
+estimated_probability
+confidence_interval
+risk_estimate
+prediction
+```
+
+Such decisions must preserve the distinction between:
+
+```text
+Observed fact
+Estimated quantity
+Model prediction
+Decision
+```
+
+A predicted probability should not silently become a fact.
+
+The decision model should preserve uncertainty when it materially affects the decision.
+
+---
+
+## 8. Objectives and Constraints
+
+A decision may depend on both objectives and constraints.
+
+For example:
+
+```text
+Objective:
+    maximize long-term growth
+
+Constraint:
+    maximum acceptable drawdown = 20 BB
+```
+
+Another application could use:
+
+```text
+Objective:
+    minimize risk
+
+Constraint:
+    minimum required return
+```
+
+The same analytical evidence can therefore lead to different decisions under different objectives.
+
+Objectives and constraints are not inherently part of measurements or patterns.
+
+---
+
+## 9. Decision Provenance
+
+Every meaningful decision should be traceable to its inputs.
+
+Conceptually:
+
+```text
+Decision
+    ↓
+Policy
+    ↓
+Analysis / Evidence
+    ↓
+Patterns
+    ↓
+Measurements
+    ↓
+Events
+```
+
+This allows an application to answer:
+
+```text
+Why was this decision produced?
+```
+
+and potentially:
+
+```text
+Which observations caused this decision?
+```
+
+Decision provenance is particularly important when decisions are:
+
+* automated
+* consequential
+* repeatedly evaluated
+* generated by complex policies
+* based on statistical or predictive models
+
+---
+
+## 10. Decision Lifecycle
+
+A decision may have a lifecycle independent from the lifecycle of the underlying pattern.
+
+A conceptual lifecycle is:
+
+```text
+PROPOSED
+    ↓
+EVALUATED
+    ↓
+ACCEPTED / REJECTED
+    ↓
+EXECUTED
+    ↓
+OBSERVED
+    ↓
+EVALUATED
+```
+
+Not every application needs every stage.
+
+For example, an analytical application may stop at:
+
+```text
+ANALYSIS
+    ↓
+RECOMMENDATION
+```
+
+while an automated control application may continue to:
+
+```text
+DECISION
+    ↓
+ACTION
+    ↓
+OBSERVATION
+```
+
+---
+
+## 11. Feedback
+
+Actions can generate new events.
+
+This creates a feedback loop:
+
+```text
+Events
+   ↓
+Analysis
+   ↓
+Decision
+   ↓
+Action
+   ↓
+New Events
+   └──────────────→
+```
+
+This is important because an action changes the environment being analyzed.
+
+The resulting events must therefore remain distinguishable from the analysis that caused them.
+
+For example:
+
+```text
+Observed:
+    bankroll decreased
+
+Analysis:
+    sustained drawdown detected
+
+Decision:
+    stop session
+
+Action:
+    session stopped
+
+New event:
+    SessionStopped
+```
+
+The `SessionStopped` event is an observation of what actually happened. It is not the decision itself.
+
+---
+
+## 12. Decision Systems Are Domain-Specific
+
+Different domains may define completely different policies.
+
+For example, a poker application might define:
+
+```text
+stake eligibility
+session limits
+bankroll rules
+risk controls
+```
+
+A trading application might define:
+
+```text
+position limits
+risk limits
+order policies
+```
+
+A simulation might define:
+
+```text
+agent behavior
+resource allocation
+state transitions
+```
+
+The generic EVolution core should not encode these meanings.
+
+Instead:
+
+```text
+EVolution Core
+        │
+        ├── Evidence
+        ├── Measurements
+        ├── Patterns
+        └── Analysis
+                │
+                ▼
+        Domain Policy
+                │
+                ▼
+        Domain Decision
+                │
+                ▼
+        Application Action
+```
+
+---
+
+## 13. Decision vs Control
+
+Decision-making and action execution should remain separate.
+
+A decision says:
+
+```text
+What should happen?
+```
+
+A control system performs:
+
+```text
+Make it happen.
+```
+
+This distinction allows EVolution to be used in:
+
+* analytical applications
+* dashboards
+* research
+* simulations
+* advisory systems
+* automated systems
+
+without requiring every application to grant the analytical system control over external resources.
+
+---
+
+## 14. Core Architectural Invariant
+
+The core may provide mechanisms for representing evidence, policies, decisions, and decision provenance.
+
+It must not impose domain-specific objectives or actions.
+
+The fundamental separation is:
+
+```text
+Observation
+    ↓
+Understanding
+    ↓
+Decision
+    ↓
+Action
+```
+
+EVolution primarily belongs to the first two stages.
+
+A domain or application may consume EVolution's output to implement the latter stages.
+
+Therefore:
+
+> **EVolution provides evidence and analysis; policies determine decisions; applications determine actions.**
