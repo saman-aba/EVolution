@@ -1,9 +1,13 @@
-# ADR 0038 — Testing Architecture
+# ADR 0070 — Testing Architecture Refinement
 
 **Status:** Accepted
-**Date:** 2026-10-03
+**Date:** 2026-10-04
+
+**Supersedes:** ADR 0034
 
 ## Context
+
+ADR 0034 established EVolution's layered, contract-oriented testing architecture. This ADR preserves that decision and refines its executable coverage requirements. It was renumbered from a duplicate ADR 0038; ADR 0038 remains the Application Operation Model referenced by ADR 0039.
 
 EVolution contains multiple architectural layers with different correctness requirements:
 

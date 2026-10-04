@@ -1,6 +1,6 @@
 # ADR 0034 — Testing Architecture
 
-**Status:** Accepted
+**Status:** Superseded by ADR 0070
 **Date:** 2026-10-03
 
 ## Context
