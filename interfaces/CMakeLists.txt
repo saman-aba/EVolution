@@ -1,0 +1,9 @@
+add_library(evolution_interfaces INTERFACE)
+add_library(EVolution::interfaces ALIAS evolution_interfaces)
+
+target_compile_features(evolution_interfaces INTERFACE cxx_std_20)
+target_link_libraries(evolution_interfaces INTERFACE EVolution::applications)
+
+set_target_properties(evolution_interfaces PROPERTIES EXPORT_NAME interfaces)
+
+install(TARGETS evolution_interfaces EXPORT EVolutionTargets)

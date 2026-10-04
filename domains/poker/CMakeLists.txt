@@ -1,0 +1,9 @@
+add_library(evolution_domain_poker INTERFACE)
+add_library(EVolution::domain_poker ALIAS evolution_domain_poker)
+
+target_compile_features(evolution_domain_poker INTERFACE cxx_std_20)
+target_link_libraries(evolution_domain_poker INTERFACE EVolution::core EVolution::processing)
+
+set_target_properties(evolution_domain_poker PROPERTIES EXPORT_NAME domain_poker)
+
+install(TARGETS evolution_domain_poker EXPORT EVolutionTargets)
