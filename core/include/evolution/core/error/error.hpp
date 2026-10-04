@@ -21,6 +21,7 @@ enum class ErrorCategory {
     Serialization,
     Persistence,
     ExternalDependency,
+    Unauthorized,
     Internal,
 };
 
