@@ -7,6 +7,7 @@ target_link_libraries(
     INTERFACE
         EVolution::analysis
         EVolution::domain_poker
+        EVolution::extensions
         EVolution::ingestion
         EVolution::processing
         EVolution::storage

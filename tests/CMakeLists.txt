@@ -61,6 +61,15 @@ evolution_add_test(
 )
 
 evolution_add_test(
+    evolution_extension_domain_tests
+    unit
+    unit/extension_domain_test.cpp
+    EVolution::extensions
+    EVolution::domain
+    EVolution::domain_poker
+)
+
+evolution_add_test(
     evolution_system_tests
     system
     system/composition_test.cpp

@@ -34,6 +34,7 @@ evolution_add_format_targets()
 
 add_subdirectory(core)
 add_subdirectory(processing)
+add_subdirectory(extensions)
 add_subdirectory(domains)
 add_subdirectory(analysis)
 add_subdirectory(storage)
