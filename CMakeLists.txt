@@ -33,6 +33,7 @@ evolution_configure_static_analysis()
 evolution_add_format_targets()
 
 add_subdirectory(core)
+add_subdirectory(security)
 add_subdirectory(processing)
 add_subdirectory(extensions)
 add_subdirectory(domains)

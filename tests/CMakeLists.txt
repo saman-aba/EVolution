@@ -77,6 +77,13 @@ evolution_add_test(
 )
 
 evolution_add_test(
+    evolution_application_boundary_tests
+    unit
+    unit/application_boundary_test.cpp
+    EVolution::interfaces
+)
+
+evolution_add_test(
     evolution_system_tests
     system
     system/composition_test.cpp
