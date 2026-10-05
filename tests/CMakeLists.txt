@@ -70,6 +70,13 @@ evolution_add_test(
 )
 
 evolution_add_test(
+    evolution_analysis_contract_tests
+    unit
+    unit/analysis_contract_test.cpp
+    EVolution::analysis
+)
+
+evolution_add_test(
     evolution_system_tests
     system
     system/composition_test.cpp
